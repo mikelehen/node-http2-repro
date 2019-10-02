@@ -1,7 +1,14 @@
 var admin = require("firebase-admin");
 var firestore = require("@google-cloud/firestore");
 
-admin.initializeApp({ projectId: 'http2-repro' });
+var cert = undefined; // require('./key.json');
+
+if (!cert) {
+  console.log('This repro needs a valid certificate.  Please contact @mikelehen for help (e.g. via https://github.com/nodejs/node/issues/29223).');
+  process.exit(-1);
+}
+
+admin.initializeApp({ projectId: 'http2-repro', credential: admin.credential.cert(cert) });
 var db = admin.firestore();
 
 function queryMore(size, startAt) {
